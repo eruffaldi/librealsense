@@ -235,6 +235,16 @@ namespace rs
             return r;
         }
 
+        /// retrieve the USB port number of the device
+        /// \return  the USB port number, in a format specific to the device model
+        const char * get_usb_port_id() const
+        {
+            rs_error * e = nullptr;
+            auto r = rs_get_device_usb_port_id((const rs_device *)this, &e);
+            error::handle(e);
+            return r;
+        }
+
         /// retrieve the version of the firmware currently installed on the device
         /// \return  firmware version string, in a format is specific to device model
         const char * get_firmware_version() const
@@ -559,7 +569,7 @@ namespace rs
     }
 
     // Additional utilities
-    void apply_depth_control_preset(device * device, int preset) { rs_apply_depth_control_preset((rs_device *)device, preset); }
-    void apply_ivcam_preset(device * device, int preset) { rs_apply_ivcam_preset((rs_device *)device, preset); }
+    inline void apply_depth_control_preset(device * device, int preset) { rs_apply_depth_control_preset((rs_device *)device, preset); }
+    inline void apply_ivcam_preset(device * device, int preset) { rs_apply_ivcam_preset((rs_device *)device, preset); }
 }
 #endif

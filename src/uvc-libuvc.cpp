@@ -63,7 +63,7 @@ namespace rsimpl
                 }
 
                 for(auto & sub : subdevices) if(sub.handle) uvc_close(sub.handle);
-                if(uvcdevice) uvc_unref_device(uvcdevice);
+                if(claimed_interfaces.size()) if(uvcdevice) uvc_unref_device(uvcdevice);
             }
 
             subdevice & get_subdevice(int subdevice_index)
@@ -80,6 +80,13 @@ namespace rsimpl
 
         int get_vendor_id(const device & device) { return device.vid; }
         int get_product_id(const device & device) { return device.pid; }
+
+        const char * get_usb_port_id(const device & device)
+        {
+            std::string usb_port = std::to_string(libusb_get_bus_number(device.uvcdevice->usb_dev)) + "-" +
+                std::to_string(libusb_get_port_number(device.uvcdevice->usb_dev));
+            return usb_port.c_str();
+        }
 
         void get_control(const device & dev, const extension_unit & xu, uint8_t ctrl, void * data, int len)
         {
